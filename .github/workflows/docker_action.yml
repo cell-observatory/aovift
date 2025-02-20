@@ -1,5 +1,5 @@
 # docker_action.yml
-name: Docker-ubuntu-build
+name: docker-ubuntu-build
 
 on:
   push:
