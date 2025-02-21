@@ -11,11 +11,11 @@ AOViFT: Adaptive Optical Vision Fourier Transformer
 [![pr](https://img.shields.io/github/issues-pr/cell-observatory/aovift.svg?style=flat&logo=github)](https://github.com/cell-observatory/aovift/pulls)
 
 <div align="center">
-  <img class="center" src="https://www.dropbox.com/scl/fi/xonddbzyjptsh1c3me0y5/fish.gif?rlkey=7owu8ez9iuk1dyabbkj4idhrz&raw=1" />
+  <img class="center" src="https://www.dropbox.com/scl/fi/xonddbzyjptsh1c3me0y5/fish.gif?rlkey=7owu8ez9iuk1dyabbkj4idhrz&raw=1" width="100%" />
 </div>
 
 <div align="center">
-  <img class="center" src="https://www.dropbox.com/scl/fi/zc2b1qqd7wte2rxzw3qtg/model.png?rlkey=n7gtkbs6rq8jjk3mr9gwxc5zz&raw=1" />
+  <img class="center" src="https://www.dropbox.com/scl/fi/zc2b1qqd7wte2rxzw3qtg/model.png?rlkey=n7gtkbs6rq8jjk3mr9gwxc5zz&raw=1" width="100%" />
 </div>
 
 * [Benchmark](#benchmark)
@@ -68,7 +68,7 @@ If you wish to download all of our models at once,
 you can use this [link](https://www.dropbox.com/scl/fo/yqr5nnmyfjoz53e4cav4d/AE4EDwrkOIytICIy7yDK6J4?rlkey=hm3em3yow48p390n8jvrt0jly&st=whj5il8d&raw=1) and extract the desired *.h5 file from the zip file.
 
 <div align="center">
-  <img class="center" src="https://www.dropbox.com/scl/fi/5psg2uunus1xesa8doz28/benchmark.png?rlkey=iq2gbmnpn6idm1pc2k5fmmq6x&raw=1" />
+  <img class="center" src="https://www.dropbox.com/scl/fi/5psg2uunus1xesa8doz28/benchmark.png?rlkey=iq2gbmnpn6idm1pc2k5fmmq6x&raw=1" width="100%" />
 </div>
 
 # Getting started
@@ -127,7 +127,7 @@ PASSED
 ## Small FOV prediction
 
 <div align="center">
-    <img src="https://www.dropbox.com/scl/fi/e1f0kpnoofa10moi85zvv/ap2.gif?rlkey=3pvphchl69dxgk5k72njt8brc&raw=1" />
+    <img src="https://www.dropbox.com/scl/fi/e1f0kpnoofa10moi85zvv/ap2.gif?rlkey=3pvphchl69dxgk5k72njt8brc&raw=1" width="100%" />
 </div>
 
 To predict the wavefront for a small FOV, you can use the `predict_sample` function: 
@@ -208,7 +208,7 @@ options:
 ## Tile-based prediction
 
 <div align="center">
-  <img src="https://www.dropbox.com/scl/fi/dj4mgimnzljxih73q07zh/fishmap.png?rlkey=ijzjsttea5xa7a9m4ptypvy8c&raw=1" />
+  <img src="https://www.dropbox.com/scl/fi/jkfvlahfsgnrgxskmcjw0/fishmap.png?rlkey=cbs6fy4o23zm23v3ay88lexa1&raw=1" width="100%" />
 </div>
 
 To tile a large FOV and predict the wavefront of each tile, you can use the `predict_tiles` function:  
