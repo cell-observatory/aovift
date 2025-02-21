@@ -98,14 +98,14 @@ RUN pip install --no-cache-dir -r requirements.txt  --progress-bar off  &&  pip 
 # For GPU dashboard use: nvitop
 WORKDIR /app
 
-ARG USERNAME=vscode
+ARG USERNAME=user1000
 ENV USER=${USERNAME}
 ARG USER_UID=1000
 ARG USER_GID=1000
 
 # Create the user
 RUN   groupadd --gid $USER_GID $USERNAME && \
-    groupadd --gid 1001 vscode_secondary && \
+    groupadd --gid 1001 user1000_secondary && \
     useradd -l --uid $USER_UID --gid $USER_GID -G 1001 -m $USERNAME && \
     #
     # [Optional] Add sudo support. Omit if you don't need to install software after connecting.        

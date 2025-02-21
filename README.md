@@ -1,11 +1,9 @@
-<div align="center">
-  <img class="center" src="https://www.dropbox.com/scl/fi/xonddbzyjptsh1c3me0y5/fish.gif?rlkey=7owu8ez9iuk1dyabbkj4idhrz&raw=1" />
-</div>
 
 AOViFT: Adaptive Optical Vision Fourier Transformer 
 ====================================================
 ***Fourier-Based 3D Multistage Transformer for Aberration Correction in Multicellular Specimens***
 
+[![docker-ubuntu-build](https://github.com/cell-observatory/aovift/actions/workflows/docker_action.yml/badge.svg)](https://github.com/cell-observatory/aovift/actions/workflows/docker_action.yml)
 [![python](https://img.shields.io/badge/python-3.10+-3776AB.svg?style=flat&logo=python&logoColor=3776AB)](https://www.python.org/)
 [![tensorflow](https://img.shields.io/badge/tensorFlow-2.14+-FF6F00.svg?style=flat&logo=tensorflow)](https://www.tensorflow.org/)
 [![license](https://img.shields.io/github/license/cell-observatory/aovift.svg?style=flat&logo=git&logoColor=white)](https://opensource.org/license/bsd-2-clause/)
@@ -13,74 +11,346 @@ AOViFT: Adaptive Optical Vision Fourier Transformer
 [![pr](https://img.shields.io/github/issues-pr/cell-observatory/aovift.svg?style=flat&logo=github)](https://github.com/cell-observatory/aovift/pulls)
 
 <div align="center">
-  <img class="center" src="https://www.dropbox.com/scl/fi/zc2b1qqd7wte2rxzw3qtg/model.png?rlkey=n7gtkbs6rq8jjk3mr9gwxc5zz&raw=1" />
+  <img class="center" src="https://www.dropbox.com/scl/fi/xonddbzyjptsh1c3me0y5/fish.gif?rlkey=7owu8ez9iuk1dyabbkj4idhrz&raw=1" />
 </div>
 
-# Table of Contents
+<div align="center">
+  <img class="center" src="https://www.dropbox.com/scl/fi/zc2b1qqd7wte2rxzw3qtg/model.png?rlkey=n7gtkbs6rq8jjk3mr9gwxc5zz&raw=1" />
+</div>
 
 * [Benchmark](#benchmark)
 * [Examples](#examples)
 * [Installation](#installation)
 * [Pretrained models](#pretrained-models)
+* [Getting started](#getting-started)
+  * [Synthetic data generator](#synthetic-data-generator)
+  * [Fourier embedding](#fourier-embedding)
+  * [Small FOV prediction](#small-fov-prediction)
+  * [Tile-based prediction](#tile-based-prediction)
 * [BibTeX](#bibtex)
 * [License](#license)
 
 
-## Benchmark
-<div align="center">
-  <img src="https://www.dropbox.com/scl/fi/vq099qein6juyekng8w5n/eval.png?rlkey=8hy7flhb78n1evv5w38xkdh1r&raw=1" />
-  <img class="center" src="https://www.dropbox.com/scl/fi/5psg2uunus1xesa8doz28/benchmark.png?rlkey=iq2gbmnpn6idm1pc2k5fmmq6x&raw=1" />
-</div>
+# Installation
 
-
-
-## Examples
-The [`src/python ao.py`](src/python ao.py) script provides a CLI
-for running our models on a given 3D stack (`.tif` file).
-
-
-<div align="center">
-  <img src="https://www.dropbox.com/scl/fi/e1f0kpnoofa10moi85zvv/ap2.gif?rlkey=3pvphchl69dxgk5k72njt8brc&raw=1" />
-  <img src="https://www.dropbox.com/scl/fi/d8izku9dds87b18ctftfv/mitochondria.gif?rlkey=x13cc4lolp3bcycuhzjqovlrv&raw=1" />
-</div>
-
-
-<div align="center">
-  <img src="https://www.dropbox.com/scl/fi/dj4mgimnzljxih73q07zh/fishmap.png?rlkey=ijzjsttea5xa7a9m4ptypvy8c&raw=1" />
-</div>
-
-
-## Installation
-
-### Git Clone repository to your host system
+## Docker & Apptainer [images](https://github.com/cell-observatory/aovift/pkgs/container/aovift)
+Our prebuilt image with Python, TensorFlow, and all packages installed for you.
 ```shell
-# Please make sure you have Git LFS installed to download our pretrained models
+docker pull ghcr.io/cell-observatory/aovift:main_TF_CUDA_12_3
+```
+Or to run image on a cluster with Apptainer
+```shell
+apptainer pull --force main_TF_CUDA_12_3.sif docker://ghcr.io/cell-observatory/aovift:main_TF_CUDA_12_3
+```
+
+## Clone repository to your host system
+```shell
 git clone --recurse-submodules https://github.com/cell-observatory/aovift.git
-# ...to later update to the latest, greatest
+```
+
+To later update to the latest, greatest
+```shell
 git pull --recurse-submodules
 ```
 
-### Docker [image]()
-Our prebuilt image with Python, TensorFlow, and all packages installed for you.
+Run `tests/test_tensorflow.py` to make sure the installation works
 ```shell
-# 
-docker pull 
+pytest -s -v --disable-pytest-warnings --color=yes tests/test_tensorflow.py
 ```
-If you want to run a local version of the image, see the [Dockerfile](https://github.com/cell-observatory/aovift/blob/main/Dockerfile)
 
-## Pretrained [models](https://www.dropbox.com/scl/fo/yqr5nnmyfjoz53e4cav4d/AE4EDwrkOIytICIy7yDK6J4?rlkey=hm3em3yow48p390n8jvrt0jly&st=whj5il8d&dl=0)
+**Note:** If you want to run a local version of the image, see the [Dockerfile](https://github.com/cell-observatory/aovift/blob/main/Dockerfile)
+
+# Pretrained [models](https://www.dropbox.com/scl/fo/yqr5nnmyfjoz53e4cav4d/AE4EDwrkOIytICIy7yDK6J4?rlkey=hm3em3yow48p390n8jvrt0jly&st=whj5il8d&dl=0)
 
 All pre-trained models can be downloaded from our [pretrained models repository](https://www.dropbox.com/scl/fo/yqr5nnmyfjoz53e4cav4d/AE4EDwrkOIytICIy7yDK6J4?rlkey=hm3em3yow48p390n8jvrt0jly&st=whj5il8d&dl=0).
 
 If you wish to download all of our models at once, 
 you can use this [link](https://www.dropbox.com/scl/fo/yqr5nnmyfjoz53e4cav4d/AE4EDwrkOIytICIy7yDK6J4?rlkey=hm3em3yow48p390n8jvrt0jly&st=whj5il8d&raw=1) and extract the desired *.h5 file from the zip file.
 
-## BibTeX
+<div align="center">
+  <img class="center" src="https://www.dropbox.com/scl/fi/5psg2uunus1xesa8doz28/benchmark.png?rlkey=iq2gbmnpn6idm1pc2k5fmmq6x&raw=1" />
+</div>
+
+# Getting started
+
+**Note:** 
+To run AOViFT pytests you need to download the following files:
+-  [Examples](https://www.dropbox.com/scl/fo/usvuuit2wsy7ycfj09g3g/AJShjIGk47KM14A4urHvteE?rlkey=ejj5hlfyur9sb0k6klshwwzdz&raw=1) directory that has a few example tif files and extract it to `aovift/examples`.
+-  [aovift-15-YuMB-lambda510.h5](https://www.dropbox.com/scl/fi/tkkd50u5m40voy30g760r/aovift-15-YuMB-lambda510.h5?rlkey=gixl8i211kjlw092jgrk7mjm1&raw=1) and save it to `aovift/pretrained_models` directory.
+
+The [`src/python ao.py`](src/python ao.py) script provides a CLI
+for running our models on a given 3D stack (`.tif` file).
+
+
+## Running docker image
+
+To run docker image, replace `working-dir` with your local path for the repository.
+```shell
+docker run --network host -u 1000 --privileged -v working-dir/aovift:/app/aovift --env PYTHONUNBUFFERED=1 --pull missing -t -i --rm -w /app/aovift --ipc host --gpus all ghcr.io/cell-observatory/aovift:main_tf_cuda_12_3 bash
+```
+
+## Synthetic data generator
+
+Running `tests/test_datasets.py` will create a dataset of synthetic data for testing.
+```shell
+pytest -s -v --disable-pytest-warnings --color=yes tests/test_datasets.py
+```
+
+## Fourier embedding
+
+Running `tests/test_embeddings.py` will create a dataset of synthetic data for testing.
+```shell
+pytest -s -v --disable-pytest-warnings --color=yes tests/test_embeddings.py
+```
+```shell
+tests/test_embeddings.py::test_fourier_embeddings Loading cached SyntheticPSF instance from /app/aovift/SyntheticPSFCache/.._lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.125_y_0.125_z_0.2_twd_simulator_False
+Loading cached SyntheticPSF instance from /app/aovift/SyntheticPSFCache/.._lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
+PASSED
+tests/test_embeddings.py::test_interpolate_embeddings Loading cached SyntheticPSF instance from /app/aovift/SyntheticPSFCache/.._lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.125_y_0.125_z_0.2_twd_simulator_False
+Loading cached SyntheticPSF instance from /app/aovift/SyntheticPSFCache/.._lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
+PASSED
+tests/test_embeddings.py::test_rolling_fourier_embeddings Loading cached SyntheticPSF instance from /app/aovift/SyntheticPSFCache/.._lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.125_y_0.125_z_0.2_twd_simulator_False
+Loading cached SyntheticPSF instance from /app/aovift/SyntheticPSFCache/.._lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
+Preprocessing, 1 rois per tile, roi size, (64, 64, 64), stride length [64 64 64], throwing away [0 0 0] voxels: 100%|█████████████████████████████████████████████| 1/1 [00:00<00:00,  7.84it/s] 0.1s elapsed
+Compute FFTs: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00, 50.52it/s] 0.0s elapsed
+Remove interference patterns: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:01<00:00,  1.04s/it] 1.0s elapsed
+PASSED
+tests/test_embeddings.py::test_embeddings_with_digital_rotations Loading cached SyntheticPSF instance from /app/aovift/SyntheticPSFCache/.._lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.125_y_0.125_z_0.2_twd_simulator_False
+Loading cached SyntheticPSF instance from /app/aovift/SyntheticPSFCache/.._lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
+Preprocessing, 1 rois per tile, roi size, (64, 64, 64), stride length [64 64 64], throwing away [0 0 0] voxels: 100%|█████████████████████████████████████████████| 1/1 [00:00<00:00,  7.85it/s] 0.1s elapsed
+Compute FFTs: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00, 149.57it/s] 0.0s elapsed
+Remove interference patterns: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:01<00:00,  1.05s/it] 1.0s elapsed
+PASSED
+```
+
+
+## Small FOV prediction
+
+<div align="center">
+    <img src="https://www.dropbox.com/scl/fi/e1f0kpnoofa10moi85zvv/ap2.gif?rlkey=3pvphchl69dxgk5k72njt8brc&raw=1" />
+</div>
+
+To predict the wavefront for a small FOV, you can use the `predict_sample` function: 
+
+```shell
+/app/aovift$ pytest -s -v --disable-pytest-warnings --color=yes tests/test_ao.py -k test_predict_sample
+```
+```shell
+tests/test_ao.py::test_predict_sample Loading cached SyntheticPSF instance from /app/aovift/SyntheticPSFCache/.._lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.125_y_0.125_z_0.2_twd_simulator_False
+Loading cached SyntheticPSF instance from /app/aovift/SyntheticPSFCache/.._lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
+6/6 [==============================] - 8s 891ms/step
+Evaluate predictions: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:03<00:00,  3.26s/it] 3.3s elapsed
+PASSED
+```
+
+```shell
+usage: ao.py predict_sample [-h] [--current_dm CURRENT_DM] [--prev PREV] [--lateral_voxel_size LATERAL_VOXEL_SIZE] [--axial_voxel_size AXIAL_VOXEL_SIZE] [--wavelength WAVELENGTH]
+                            [--dm_damping_scalar DM_DAMPING_SCALAR] [--freq_strength_threshold FREQ_STRENGTH_THRESHOLD] [--prediction_threshold PREDICTION_THRESHOLD]
+                            [--confidence_threshold CONFIDENCE_THRESHOLD] [--sign_threshold SIGN_THRESHOLD] [--plot] [--plot_rotations] [--num_predictions NUM_PREDICTIONS] [--batch_size BATCH_SIZE]
+                            [--estimate_sign_with_decon] [--ignore_mode IGNORE_MODE] [--ideal_empirical_psf IDEAL_EMPIRICAL_PSF] [--cpu_workers CPU_WORKERS] [--cluster] [--partition PARTITION] [--docker]
+                            [--digital_rotations DIGITAL_ROTATIONS] [--psf_type PSF_TYPE] [--min_psnr MIN_PSNR] [--estimated_object_gaussian_sigma ESTIMATED_OBJECT_GAUSSIAN_SIGMA] [--denoiser DENOISER]
+                            model input dm_calibration
+
+positional arguments:
+  model                 path to pretrained tensorflow model
+  input                 path to input .tif file
+  dm_calibration        path DM dm_calibration mapping matrix (eg. Zernike_Korra_Bax273.csv)
+
+options:
+  -h, --help            show this help message and exit
+  --current_dm CURRENT_DM
+                        optional path to current DM .csv file (Default: `blank mirror`)
+  --prev PREV           previous predictions .csv file (Default: `None`)
+  --lateral_voxel_size LATERAL_VOXEL_SIZE
+                        lateral voxel size in microns for X (Default: `0.097`)
+  --axial_voxel_size AXIAL_VOXEL_SIZE
+                        axial voxel size in microns for Z (Default: `0.1`)
+  --wavelength WAVELENGTH
+                        wavelength in microns (Default: `0.51`)
+  --dm_damping_scalar DM_DAMPING_SCALAR
+                        scale DM actuators by an arbitrary multiplier (Default: `0.75`)
+  --freq_strength_threshold FREQ_STRENGTH_THRESHOLD
+                        minimum frequency threshold in fourier space (percentages; values below that will be set to the desired minimum) (Default: `0.01`)
+  --prediction_threshold PREDICTION_THRESHOLD
+                        set predictions below threshold to zero (waves) (Default: `0.0`)
+  --confidence_threshold CONFIDENCE_THRESHOLD
+                        optional threshold to flag unconfident predictions based on the standard deviations of the predicted amplitudes for all digital rotations (microns) (Default: `0.02`)
+  --sign_threshold SIGN_THRESHOLD
+                        flip sign of modes above given threshold relative to your initial prediction (Default: `0.9`)
+  --plot                a toggle for plotting predictions
+  --plot_rotations      a toggle for plotting predictions for digital rotations
+  --num_predictions NUM_PREDICTIONS
+                        number of predictions per sample to estimate model's confidence (Default: `1`)
+  --batch_size BATCH_SIZE
+                        maximum batch size for the model (Default: `100`)
+  --estimate_sign_with_decon
+                        a toggle for estimating signs of each Zernike mode via decon
+  --ignore_mode IGNORE_MODE
+                        ANSI index for mode you wish to ignore (Default: `[0, 1, 2, 4]`)
+  --ideal_empirical_psf IDEAL_EMPIRICAL_PSF
+                        path to an ideal empirical psf (Default: `None` ie. will be simulated automatically)
+  --cpu_workers CPU_WORKERS
+                        number of CPU cores to use (Default: `-1`)
+  --cluster             a toggle to run predictions on our cluster
+  --partition PARTITION
+                        slurm partition to use on the ABC cluster (Default: `abc_a100`)
+  --docker              a toggle to run predictions through docker container
+  --digital_rotations DIGITAL_ROTATIONS
+                        optional flag for applying digital rotations (Default: `361`)
+  --psf_type PSF_TYPE   widefield, 2photon, confocal, or a path to an LLS excitation profile (Default: None; to keep default mode used during training)
+  --min_psnr MIN_PSNR   Will blank image if filtered image does not meet this SNR minimum. min_psnr=0 disables this threshold (Default: `5`)
+  --estimated_object_gaussian_sigma ESTIMATED_OBJECT_GAUSSIAN_SIGMA
+                        size of object for creating an ideal psf (default: 0; single pixel) (Default: `0.0`)
+  --denoiser DENOISER   path to denoiser model (Default: `None`)
+```
+
+
+## Tile-based prediction
+
+<div align="center">
+  <img src="https://www.dropbox.com/scl/fi/dj4mgimnzljxih73q07zh/fishmap.png?rlkey=ijzjsttea5xa7a9m4ptypvy8c&raw=1" />
+</div>
+
+To tile a large FOV and predict the wavefront of each tile, you can use the `predict_tiles` function:  
+```shell
+pytest -s -v --disable-pytest-warnings --color=yes tests/test_ao.py -k test_predict_tiles
+```
+```shell
+tests/test_ao.py::test_predict_tiles Loading cached SyntheticPSF instance from /app/aovift/SyntheticPSFCache/.._lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.125_y_0.125_z_0.2_twd_simulator_False
+Loading cached SyntheticPSF instance from /app/aovift/SyntheticPSFCache/.._lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
+Locating tiles: [288]: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 288/288 [00:41<00:00,  6.90 tile/s] 41.7s elapsed
+Generate fourier embeddings: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 171/171 [00:40<00:00,  4.17 .tif file/s] 41.0s elapsed
+965/965 [==============================] - 950s 976ms/step
+Evaluate predictions: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 171/171 [00:00<00:00, 857925.82 evals/s] 0.0s elapsed
+PASSED
+```
+
+You can then run `aggregate_predictions` to create some visualizations : 
+```shell
+pytest -s -v --disable-pytest-warnings --color=yes tests/test_ao.py -k test_aggregate_tiles
+```
+```shell
+tests/test_ao.py::test_aggregate_tiles Loading cached SyntheticPSF instance from /app/aovift/SyntheticPSFCache/.._lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
+Loading cached SyntheticPSF instance from /app/aovift/SyntheticPSFCache/.._lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.59_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
+
+Number of tiles in each cluster of aggregated map, z=0
+c    count
+1     8
+2    23
+3    12
+4    14
+5    30
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 288/288 [00:08<00:00, 34.95it/s]
+PASSED
+```
+
+```shell
+usage: ao.py predict_tiles [-h] [--current_dm CURRENT_DM] [--batch_size BATCH_SIZE] [--window_size WINDOW_SIZE] [--prev PREV] [--lateral_voxel_size LATERAL_VOXEL_SIZE]
+                           [--axial_voxel_size AXIAL_VOXEL_SIZE] [--wavelength WAVELENGTH] [--freq_strength_threshold FREQ_STRENGTH_THRESHOLD] [--confidence_threshold CONFIDENCE_THRESHOLD]
+                           [--sign_threshold SIGN_THRESHOLD] [--estimated_object_gaussian_sigma ESTIMATED_OBJECT_GAUSSIAN_SIGMA] [--plot] [--plot_rotations] [--num_predictions NUM_PREDICTIONS]
+                           [--estimate_sign_with_decon] [--ignore_mode IGNORE_MODE] [--ideal_empirical_psf IDEAL_EMPIRICAL_PSF] [--cpu_workers CPU_WORKERS] [--cluster] [--partition PARTITION] [--docker]
+                           [--digital_rotations DIGITAL_ROTATIONS] [--shift SHIFT] [--psf_type PSF_TYPE] [--min_psnr MIN_PSNR] [--denoiser DENOISER]
+                           model input dm_calibration
+
+positional arguments:
+  model                 path to pretrained tensorflow model
+  input                 path to input .tif file
+  dm_calibration        path DM dm_calibration mapping matrix (eg. Zernike_Korra_Bax273.csv)
+
+options:
+  -h, --help            show this help message and exit
+  --current_dm CURRENT_DM
+                        optional path to current DM .csv file (Default: `blank mirror`)
+  --batch_size BATCH_SIZE
+                        maximum batch size for the model (Default: `100`)
+  --window_size WINDOW_SIZE
+                        size of the window to crop each tile (Default: `64-64-64`)
+  --prev PREV           previous predictions .csv file (Default: `None`)
+  --lateral_voxel_size LATERAL_VOXEL_SIZE
+                        lateral voxel size in microns for X (Default: `0.097`)
+  --axial_voxel_size AXIAL_VOXEL_SIZE
+                        axial voxel size in microns for Z (Default: `0.1`)
+  --wavelength WAVELENGTH
+                        wavelength in microns (Default: `0.51`)
+  --freq_strength_threshold FREQ_STRENGTH_THRESHOLD
+                        minimum frequency threshold in fourier space (percentages; values below that will be set to the desired minimum) (Default: `0.01`)
+  --confidence_threshold CONFIDENCE_THRESHOLD
+                        optional threshold to flag unconfident predictions based on the standard deviations of the predicted amplitudes for all digital rotations (microns) (Default: `0.015`)
+  --sign_threshold SIGN_THRESHOLD
+                        flip sign of modes above given threshold relative to your initial prediction (Default: `0.9`)
+  --estimated_object_gaussian_sigma ESTIMATED_OBJECT_GAUSSIAN_SIGMA
+                        size of object for creating an ideal psf (default: 0; single pixel) (Default: `0.0`)
+  --plot                a toggle for plotting predictions
+  --plot_rotations      a toggle for plotting predictions for digital rotations
+  --num_predictions NUM_PREDICTIONS
+                        number of predictions per tile to estimate model's confidence (Default: `1`)
+  --estimate_sign_with_decon
+                        a toggle for estimating signs of each Zernike mode via decon
+  --ignore_mode IGNORE_MODE
+                        ANSI index for mode you wish to ignore (Default: `[0, 1, 2, 4]`)
+  --ideal_empirical_psf IDEAL_EMPIRICAL_PSF
+                        path to an ideal empirical psf (Default: `None` ie. will be simulated automatically)
+  --cpu_workers CPU_WORKERS
+                        number of CPU cores to use (Default: `-1`)
+  --cluster             a toggle to run predictions on our cluster
+  --partition PARTITION
+                        slurm partition to use on the ABC cluster (Default: `abc_a100`)
+  --docker              a toggle to run predictions through docker container
+  --digital_rotations DIGITAL_ROTATIONS
+                        optional flag for applying digital rotations (Default: `361`)
+  --shift SHIFT         optional flag for applying digital x shift (Default: `0`)
+  --psf_type PSF_TYPE   widefield, 2photon, confocal, or a path to an LLS excitation profile (Default: None; to keep default mode used during training)
+  --min_psnr MIN_PSNR   Will blank image if filtered image does not meet this SNR minimum. min_psnr=0 disables this threshold (Default: `5`)
+  --denoiser DENOISER   path to denoiser model (Default: `None`)
+```
+
+```shell
+usage: ao.py aggregate_predictions [-h] [--current_dm CURRENT_DM] [--dm_damping_scalar DM_DAMPING_SCALAR] [--prediction_threshold PREDICTION_THRESHOLD] [--majority_threshold MAJORITY_THRESHOLD]
+                                   [--aggregation_rule AGGREGATION_RULE] [--min_percentile MIN_PERCENTILE] [--max_percentile MAX_PERCENTILE] [--max_isoplanatic_clusters MAX_ISOPLANATIC_CLUSTERS] [--plot]
+                                   [--ignore_tile IGNORE_TILE] [--cpu_workers CPU_WORKERS] [--cluster] [--partition PARTITION] [--docker] [--psf_type PSF_TYPE]
+                                   input dm_calibration
+
+positional arguments:
+  input                 path to csv file
+  dm_calibration        path DM calibration mapping matrix (eg. Zernike_Korra_Bax273.csv)
+
+options:
+  -h, --help            show this help message and exit
+  --current_dm CURRENT_DM
+                        optional path to current DM current_dm .csv file (Default: `blank mirror`)
+  --dm_damping_scalar DM_DAMPING_SCALAR
+                        scale DM actuators by an arbitrary multiplier (Default: `0.75`)
+  --prediction_threshold PREDICTION_THRESHOLD
+                        set predictions below threshold to zero (p2v waves) (Default: `0.25`)
+  --majority_threshold MAJORITY_THRESHOLD
+                        majority rule to use to determine dominant modes among ROIs (Default: `0.5`)
+  --aggregation_rule AGGREGATION_RULE
+                        rule to use to calculate final prediction [mean, median, min, max] (Default: `median`)
+  --min_percentile MIN_PERCENTILE
+                        minimum percentile to filter out outliers (Default: `5`)
+  --max_percentile MAX_PERCENTILE
+                        maximum percentile to filter out outliers (Default: `95`)
+  --max_isoplanatic_clusters MAX_ISOPLANATIC_CLUSTERS
+                        maximum number of unique isoplanatic patchs for clustering tiles (Default: `3`)
+  --plot                a toggle for plotting predictions
+  --ignore_tile IGNORE_TILE
+                        IDs [e.g., "z0-y0-x0"] for tiles you wish to ignore
+  --cpu_workers CPU_WORKERS
+                        number of CPU cores to use (Default: `-1`)
+  --cluster             a toggle to run predictions on our cluster
+  --partition PARTITION
+                        slurm partition to use on the ABC cluster (Default: `abc_a100`)
+  --docker              a toggle to run predictions through docker container
+  --psf_type PSF_TYPE   widefield, 2photon, confocal, or a path to an LLS excitation profile (Default: None; to keep default mode used during training)
+```
+
+
+# BibTeX
 
 ```bibtex
 comming soon
 ```
 
-## License 
+# License 
 
 This work is licensed under the [BSD 2-Clause License](https://github.com/cell-observatory/aovift/blob/main/LICENSE)
