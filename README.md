@@ -89,12 +89,15 @@ To run docker image, replace `working-dir` with your local path for the reposito
 docker run --network host -u 1000 --privileged -v working-dir/aovift:/app/aovift --env PYTHONUNBUFFERED=1 --pull missing -t -i --rm -w /app/aovift --ipc host --gpus all ghcr.io/cell-observatory/aovift:main_tf_cuda_12_3 bash
 ```
 
-## Synthetic data generator
+## [Synthetic data generator](https://github.com/cell-observatory/beads_simulator)
 
 Running `tests/test_datasets.py` will create a dataset of synthetic data for testing.
 ```shell
 pytest -s -v --disable-pytest-warnings --color=yes tests/test_datasets.py
 ```
+
+**Note:**
+If you just want to use our beads simulator without our models for your own projects, you can use our [beads simulator repository](https://github.com/cell-observatory/beads_simulator).
 
 ## Fourier embedding
 
