@@ -184,7 +184,7 @@ def parse_args(args):
     )
 
     docker.add_argument(
-        "--image", default='ghcr.io/cell-observatory/aovift:tensorflow_TF_CUDA_12_3', type=str,
+        "--image", default='ghcr.io/cell-observatory/aovift:main_tf_cuda_12_3', type=str,
         help='docker image to use for this job'
     )
 

@@ -10,7 +10,7 @@ NETWORK='convnext'
 MODES=15
 CLUSTER='lsf'
 DEFAULT='--lr 1e-3 --wd 1e-2 --opt lamb'
-APPTAINER="--apptainer ../tensorflow_TF_CUDA_12_3.sif"
+APPTAINER="--apptainer ../main_tf_cuda_12_3.sif"
 H100="--partition gpu_h100 --gpus 8 --cpus 16"
 A100="--partition gpu_a100 --gpus 4 --cpus 8"
 

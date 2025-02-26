@@ -166,7 +166,7 @@ def submit_docker_job(args=None, command_flags=None) -> int:
     container_repo = "/app/aovift"  # location of repo in the container
     local_repo = Path(__file__).parent.parent  # location of repo in host
     branch_name = get_active_branch_name(local_repo)
-    CUDA_version = "TF_CUDA_12_3"
+    CUDA_version = "tf_cuda_12_3"
 
     if command_flags is None:
         flags = ' '.join(args)
