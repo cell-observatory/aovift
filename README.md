@@ -12,12 +12,12 @@ AOViFT: Adaptive Optical Vision Fourier Transformer
 
 <div style="text-align: center; width: 100%; display: inline-block; text-align: center;" >
  <h2>Fourier-Based 3D Multistage Transformer for Aberration Correction in Multicellular Specimens</h2>
-  <h3>
+  <p>
   Thayer Alshaabi<sup>1,2*</sup>, Daniel E. Milkie<sup>1</sup>, Gaoxiang Liu<sup>2</sup>, Cyna Shirazinejad<sup>2</sup>, Jason L. Hong<sup>2</sup>, Kemal Achour<sup>2</sup>, Frederik Görlitz<sup>2</sup>, Ana Milunovic-Jevtic<sup>2</sup>, Cat Simmons<sup>2</sup>, Ibrahim S. Abuzahriyeh<sup>2</sup>, Erin Hong<sup>2</sup>, Samara Erin Williams<sup>2</sup>, Nathanael Harrison<sup>2</sup>, Evan Huang<sup>2</sup>, Eun Seok Bae<sup>2</sup>, Alison N. Killilea<sup>2</sup>, David G. Drubin<sup>2</sup>, Ian A. Swinburne<sup>2</sup>, Srigokul Upadhyayula<sup>2,3,4*</sup>, Eric Betzig<sup>1,2,5*</sup>
-  </h3>
-  <h3>
+  </p>
+  <h5>
     <sup>1</sup>HHMI, <sup>2</sup>UC Berkeley, <sup>3</sup>Lawrence Berkeley National Laboratory, <sup>4</sup>Chan Zuckerberg Biohub, <sup>5</sup>Helen Wills Neuroscience Institute
-  </h3>
+  </h5>
 </div>
 
 
@@ -387,9 +387,10 @@ options:
 ```bibtex
 @article{alshaabi2025fourier,
   title={Fourier-Based 3D Multistage Transformer for Aberration Correction in Multicellular Specimens},
-  author={Thayer Alshaabi, Daniel E. Milkie, Gaoxiang Liu, Cyna Shirazinejad, Jason L. Hong, Kemal Achour, Frederik Görlitz, Ana Milunovic-Jevtic, Cat Simmons, Ibrahim S. Abuzahriyeh, Erin Hong, Samara Erin Williams, Nathanael Harrison, Evan Huang, Eun Seok Bae, Alison N. Killilea, David G. Drubin, Ian A. Swinburne, Srigokul Upadhyayula, Eric Betzig},
-  journal={arXiv preprint arXiv:},
-  year={2025}
+  author={Thayer Alshaabi and Daniel E. Milkie and Gaoxiang Liu and Cyna Shirazinejad and Jason L. Hong and Kemal Achour and Frederik Görlitz and Ana Milunovic-Jevtic and Cat Simmons and Ibrahim S. Abuzahriyeh and Erin Hong and Samara Erin Williams and Nathanael Harrison and Evan Huang and Eun Seok Bae and Alison N. Killilea and David G. Drubin and Ian A. Swinburne and Srigokul Upadhyayula and Eric Betzig},
+  journal={},
+  year={2025},
+  url={https://arxiv.org/abs/},
 }
 ```
 
