@@ -1,8 +1,8 @@
 
 AOViFT: Adaptive Optical Vision Fourier Transformer 
 ====================================================
-[![arXiv](https://img.shields.io/badge/arXiv-preprint-red.svg)](https://arxiv.org/abs/<INDEX>)
-[![docker-ubuntu-build](https://github.com/cell-observatory/aovift/actions/workflows/docker_action.yml/badge.svg)](https://github.com/cell-observatory/aovift/actions/workflows/docker_action.yml)
+[![arXiv](https://img.shields.io/badge/arXiv-2503.12593-b31b1b.svg)](https://arxiv.org/abs/2503.12593)
+[![package](https://github.com/cell-observatory/aovift/actions/workflows/docker_action.yml/badge.svg)](https://github.com/cell-observatory/aovift/actions/workflows/docker_action.yml)
 [![python](https://img.shields.io/badge/python-3.10+-3776AB.svg?style=flat&logo=python&logoColor=3776AB)](https://www.python.org/)
 [![tensorflow](https://img.shields.io/badge/tensorFlow-2.14+-FF6F00.svg?style=flat&logo=tensorflow)](https://www.tensorflow.org/)
 [![license](https://img.shields.io/github/license/cell-observatory/aovift.svg?style=flat&logo=git&logoColor=white)](https://opensource.org/license/bsd-2-clause/)
@@ -18,6 +18,15 @@ AOViFT: Adaptive Optical Vision Fourier Transformer
   <h5>
     <sup>1</sup>HHMI, <sup>2</sup>UC Berkeley, <sup>3</sup>Lawrence Berkeley National Laboratory, <sup>4</sup>Chan Zuckerberg Biohub, <sup>5</sup>Helen Wills Neuroscience Institute
   </h5>
+  <div align="center">
+
+  [![arXiv](https://img.shields.io/badge/arXiv-2503.12593-b31b1b.svg?style=for-the-badge&logo=arxiv&logoColor=white)](https://arxiv.org/abs/2503.12593) &nbsp;
+  [![Docker](https://img.shields.io/badge/docker-image-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)](https://github.com/cell-observatory/aovift/pkgs/container/aovift) &nbsp;
+  [![pretrained-models](https://img.shields.io/badge/pretrained-models-%233B4D98.svg?style=for-the-badge&logo=Dropbox&logoColor=white)](https://www.dropbox.com/scl/fo/yqr5nnmyfjoz53e4cav4d/AE4EDwrkOIytICIy7yDK6J4?rlkey=hm3em3yow48p390n8jvrt0jly&st=whj5il8d&dl=0) &nbsp;
+  [![Pytest](https://img.shields.io/badge/pytest-suite-%23ffffff.svg?style=for-the-badge&logo=pytest&logoColor=2f9fe3)](https://github.com/cell-observatory/aovift/tree/main/tests) &nbsp;
+  [![BibTeX](https://img.shields.io/badge/BibTeX-reference-%23008080.svg?style=for-the-badge&logo=latex&logoColor=white)](#bibtex)
+
+  </div>
 </div>
 
 
@@ -388,9 +397,9 @@ options:
 @article{alshaabi2025fourier,
   title={Fourier-Based 3D Multistage Transformer for Aberration Correction in Multicellular Specimens},
   author={Thayer Alshaabi and Daniel E. Milkie and Gaoxiang Liu and Cyna Shirazinejad and Jason L. Hong and Kemal Achour and Frederik Görlitz and Ana Milunovic-Jevtic and Cat Simmons and Ibrahim S. Abuzahriyeh and Erin Hong and Samara Erin Williams and Nathanael Harrison and Evan Huang and Eun Seok Bae and Alison N. Killilea and David G. Drubin and Ian A. Swinburne and Srigokul Upadhyayula and Eric Betzig},
-  journal={},
+  journal={arXiv preprint arXiv:2503.12593},
   year={2025},
-  url={https://arxiv.org/abs/},
+  url={https://arxiv.org/abs/2503.12593},
 }
 ```
 
