@@ -199,6 +199,10 @@ def main(args=None):
             )
         elif args.target == 'templates':
             savepath = eval.plot_templates(args.model)
+
+        elif args.target == 'embeddings_templates':
+            savepath = eval.plot_embeddings_templates(args.model)
+
         elif args.target == 'sizes':
             savepath = eval.evaluate_object_sizes(
                 args.model,

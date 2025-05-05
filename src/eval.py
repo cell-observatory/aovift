@@ -3038,7 +3038,6 @@ def plot_templates(model: Path):
     aberrations = np.zeros((len(waves), modelspecs.n_modes))
     gen = backend.load_metadata(model, psf_shape=(64, 64, 64))
 
-    # plot templates
     for i in trange(3, modelspecs.n_modes):
         if i == 4:
             continue
@@ -3105,6 +3104,152 @@ def plot_templates(model: Path):
         plt.savefig(f'{savepath}_templateheatmap.png', dpi=300, bbox_inches='tight', pad_inches=.25)
         plt.savefig(f'{savepath}_templateheatmap.svg', dpi=300, bbox_inches='tight', pad_inches=.25)
         logger.info(f'Saved: {savepath}_templateheatmap.png  .pdf  .svg')
+
+
+def plot_embeddings_templates(model: Path, num_objs = 5):
+    plt.rcParams.update({
+        'font.size': 14,
+        'axes.titlesize': 14,
+        'axes.labelsize': 14,
+        'xtick.labelsize': 14,
+        'ytick.labelsize': 14,
+        'legend.fontsize': 14,
+        'axes.autolimit_mode': 'round_numbers'
+    })
+
+    outdir = model.with_suffix('') / 'embeddings_templates_5'
+    outdir.mkdir(parents=True, exist_ok=True)
+    modelspecs = backend.load_metadata(model)
+
+    photon_step = 2e4
+    photons = np.arange(0, 1e5+photon_step, photon_step).astype(int)
+    waves = np.arange(-.2, .3, step=.1).round(2)
+
+    aberrations = np.zeros((len(waves), modelspecs.n_modes))
+    gen = backend.load_metadata(model, psf_shape=(64, 64, 64))
+
+    reference = multipoint_dataset.beads(
+        photons=1,
+        image_shape=gen.psf_shape,
+        object_size=0,
+        num_objs=num_objs,
+        fill_radius=.66 if num_objs > 1 else 0
+    )
+
+    for i in tqdm([[5, 6, 7, 12]]):
+        if i == 4:
+            continue
+
+        savepath = outdir / f"m{i}"
+
+        fig, ax = plt.subplots(figsize=(6, 6))
+        phi = np.zeros(15)
+        phi[i] = .2
+        w = Wavefront(phi, lam_detection=gen.lam_detection)
+        ax.imshow(w.wave(size=100), vmin=-1, vmax=1, cmap='Spectral_r')
+        ax.axis('off')
+        plt.subplots_adjust(top=.9, bottom=.1, left=.1, right=.9, hspace=.15, wspace=.15)
+        fig.savefig(f'{savepath}_wavefront.pdf', bbox_inches='tight', pad_inches=.25, transparent=True)
+        fig.savefig(f'{savepath}_wavefront.png', dpi=300, bbox_inches='tight', pad_inches=.25, transparent=True)
+        fig.savefig(f'{savepath}_wavefront.svg', dpi=300, bbox_inches='tight', pad_inches=.25, transparent=True)
+        logger.info(f'Saved: {savepath}_wavefront.png  .pdf  .svg')
+
+
+        for plane in range(9):
+            fig, axes = plt.subplots(nrows=len(waves), ncols=len(photons), figsize=(6, 5))
+
+            for t, a in tqdm(
+                enumerate(waves[::-1]),
+                desc=f'Simulating aberrations for [{len(waves)}] AMP bins & [{len(photons)}] PH bins',
+                total=len(waves)
+            ):
+                for j, ph in enumerate(photons):
+                    phi = np.zeros_like(aberrations[0])
+                    phi[i] = a
+
+                    w = Wavefront(phi, lam_detection=gen.lam_detection)
+                    kernel = gen.single_psf(phi=w, meta=False)
+
+                    img = simulate_beads(
+                        psf=kernel,
+                        psf_type=gen.psf_type,
+                        beads=reference * ph,
+                        noise=True,
+                    )
+                    path = f'{savepath}_ph{ph}_a{str(a).replace("0.", "p")}'
+                    imwrite(f'{path}.tif', img.astype(np.float32))
+                    img -= 100
+                    img[img < 0] = 0
+
+                    emb = backend.preprocess(
+                        img,
+                        modelpsfgen=gen,
+                        digital_rotations=None,
+                        remove_background=True,
+                        normalize=True,
+                        min_psnr=0,
+                        plot=path
+                    )
+
+                    imwrite(f'{path}_embeddings.tif', emb, compression='deflate')
+
+                    if plane == 6:
+                        axes[t, j].imshow(np.max(img, axis=0) ** .5, cmap='hot')
+                    elif plane == 7:
+                        axes[t, j].imshow(np.max(img, axis=1) ** .5, cmap='hot')
+                    elif plane == 8:
+                        axes[t, j].imshow(np.max(img, axis=2) ** .5, cmap='hot')
+                    else:
+                        if plane >= 3:  # plot phase
+                            vmax = max(np.ceil(np.nanpercentile(np.abs(emb[3:]), 95) * 2) / 2, .25)
+                            vmin = -vmax
+                            vcenter = 0
+                            step = vmax / 10
+
+                            cmap = np.vstack((
+                                plt.get_cmap('GnBu_r' if vmin == 0 else 'GnBu_r', 256)(
+                                    np.linspace(0, 1, int(abs(vcenter - vmin) / step))
+                                ),
+                                [1, 1, 1, 1],
+                                plt.get_cmap('YlOrRd' if vmax == 3 else 'OrRd', 256)(
+                                    np.linspace(0, 1, int(abs(vcenter - vmax) / step))
+                                )
+                            ))
+                            cmap = mcolors.ListedColormap(cmap)
+                        else:  # plot amp
+                            step = .1
+                            vmin = int(np.floor(np.nanpercentile(emb[0], 1))) if np.any(emb[0] < 0) else 0
+                            vmax = int(np.ceil(np.nanpercentile(emb[0], 99))) if vmin < 0 else 3
+                            vcenter = 1 if vmin == 0 else 0
+
+                            cmap = np.vstack((
+                                plt.get_cmap('GnBu_r' if vmin == 0 else 'GnBu_r', 256)(
+                                    np.linspace(0, 1 - step, int(abs(vcenter - vmin) / step))
+                                ),
+                                [1, 1, 1, 1],
+                                plt.get_cmap('YlOrRd' if vmax != 1 else 'OrRd', 256)(
+                                    np.linspace(0, 1 + step, int(abs(vcenter - vmax) / step))
+                                )
+                            ))
+                            cmap = mcolors.ListedColormap(cmap)
+
+                        axes[t, j].imshow(emb[plane], cmap=cmap, vmin=vmin, vmax=vmax)
+
+                    axes[t, j].set_xticks([])
+                    axes[t, j].set_yticks([])
+
+                    if j == 0:
+                        rms = np.sign(a) * np.round(w.rms(waves=True), 1)
+                        axes[t, j].set_ylabel(f'{rms:.1f}$\lambda$')
+
+                    if t == len(waves) - 1:
+                        axes[t, j].set_xlabel(f'{ph/1e5:.1f}')
+
+            plt.subplots_adjust(top=.95, bottom=.05, left=.05, right=.95, hspace=.05, wspace=.05)
+            fig.savefig(f'{savepath}_templateheatmap_emb{plane}.pdf', bbox_inches='tight', pad_inches=.25)
+            fig.savefig(f'{savepath}_templateheatmap_emb{plane}.png', dpi=300, bbox_inches='tight', pad_inches=.25)
+            fig.savefig(f'{savepath}_templateheatmap_emb{plane}.svg', dpi=300, bbox_inches='tight', pad_inches=.25)
+            logger.info(f'Saved: {savepath}_templateheatmap_emb{plane}.png  .pdf  .svg')
 
 
 def create_samples(
