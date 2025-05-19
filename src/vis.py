@@ -232,7 +232,7 @@ def plot_wavefront(
             iax.set_title(err)
         else:
             if rms is not None:
-                iax.set_title(f'{label} RMS[{rms:.2f}$\lambda$]\n{err}\n$NA_{{1.0}}=${p2v:.2f}$\lambda$ (P2V)')
+                iax.set_title(f'{label} {rms:.1f}$\lambda$ RMS \n{err}\n$NA_{{1.0}}=${p2v:.1f}$\lambda$ (P2V)')
             else:
                 iax.set_title(f'{label} [{p2v:.2f}$\lambda$] (P2V)\n{err}')
 

@@ -177,7 +177,7 @@ def plot_embedding_pyramid(
         'legend.fontsize': 12,
     })
 
-    vmin, vmax, vcenter, step = 0, 2, 1, .1
+    vmin, vmax, vcenter, step = 0, 2, 1, .01
 
     alpha_cmap = np.vstack((
         plt.get_cmap('GnBu_r', 256)(
@@ -212,7 +212,7 @@ def plot_embedding_pyramid(
         z_voxel_size=z_voxel_size,
         cpu_workers=-1,
     )
-    waves = np.arange(-.3, .35, step=.05).round(2)
+    waves = np.arange(-.5, .55, step=.05).round(2)
 
     for nth_order in range(2, 11):
         for amp in tqdm(waves, file=sys.stdout):
@@ -254,6 +254,49 @@ def plot_embedding_pyramid(
                                 embedding_option=embedding_option,
                             )
                             embeddings[z] = emb
+
+                            fig, ax = plt.subplots( figsize=(4, 4))
+                            ax.axis('off')
+
+                            plot_wavefront(
+                                ax,
+                                wavefront.wave(size=100),
+                                rms=wavefront.rms(),
+                                # label=rf'{z.index_ansi}: $Z_{{n={z.n}}}^{{m={z.m}}}$',
+                                vmin=-1,
+                                vmax=1,
+                            )
+
+                            plt.subplots_adjust(top=0.95, right=0.95, wspace=.2)
+                            outdir = Path(f'{datadir}/{embedding_option}/{nth_order}th')
+                            outdir.mkdir(exist_ok=True, parents=True)
+                            plt.savefig(f'{outdir}/{z.index_ansi}_{str(amp).replace("0.", "p")}_wavefront.pdf', bbox_inches='tight', pad_inches=.25, transparent=True)
+                            plt.savefig(f'{outdir}/{z.index_ansi}_{str(amp).replace("0.", "p")}_wavefront.png', dpi=300, bbox_inches='tight', pad_inches=.25, transparent=True)
+                            plt.savefig(f'{outdir}/{z.index_ansi}_{str(amp).replace("0.", "p")}_wavefront.svg', dpi=300, bbox_inches='tight', pad_inches=.25, transparent=True)
+                            logger.info(f'Saved: {outdir}/{z.index_ansi}_{str(amp).replace("0.", "p")}_wavefront.png  .pdf  .svg')
+
+
+                            for plane in range(6):
+                                outdir = Path(f'{datadir}/{embedding_option}/{nth_order}th/POI_{plane}')
+                                outdir.mkdir(exist_ok=True, parents=True)
+
+                                fig, ax = plt.subplots( figsize=(4, 4))
+                                ax.axis('off')
+
+                                mat = ax.imshow(
+                                    np.squeeze(embeddings[z][plane]),
+                                    cmap=alpha_cmap if plane < 3 else phi_cmap,
+                                    vmin=vmin if plane < 3 else -.5,
+                                    vmax=vmax if plane < 3 else .5,
+                                )
+
+                                plt.subplots_adjust(top=0.95, right=0.95, wspace=.2)
+                                outdir = Path(f'{datadir}/{embedding_option}/{nth_order}th/POI_{plane}')
+                                plt.savefig(f'{outdir}/{z.index_ansi}_{str(amp).replace("0.", "p")}.pdf', bbox_inches='tight', pad_inches=.25, transparent=True)
+                                plt.savefig(f'{outdir}/{z.index_ansi}_{str(amp).replace("0.", "p")}.png', dpi=300, bbox_inches='tight', pad_inches=.25, transparent=True)
+                                plt.savefig(f'{outdir}/{z.index_ansi}_{str(amp).replace("0.", "p")}.svg', dpi=300, bbox_inches='tight', pad_inches=.25, transparent=True)
+                                logger.info(f'Saved: {outdir}/{z.index_ansi}_{str(amp).replace("0.", "p")}.png  .pdf  .svg')
+
                         except ValueError:
                             continue
 
