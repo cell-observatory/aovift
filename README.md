@@ -648,4 +648,10 @@ you can use this [link](https://www.dropbox.com/scl/fo/yqr5nnmyfjoz53e4cav4d/AE4
 
 # License 
 
-This work is licensed under the [BSD 2-Clause License](https://github.com/cell-observatory/aovift/blob/main/LICENSE)
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   [Apache License 2.0](LICENSE)
+
+Copyright 2025 Cell Observatory.
